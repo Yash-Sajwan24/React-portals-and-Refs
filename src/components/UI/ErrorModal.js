@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import Card from "./Card";
 import Button from "./Button";
 import classes from "./ErrorModal.module.css";
+//here you have added the portal 
 
 const BackDrop = (props) => {
   return (

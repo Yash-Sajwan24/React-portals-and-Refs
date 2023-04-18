@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-
+import React, { useState, useRef } from 'react';
+//instead of useState we can also use useRef to make much shorter code
+//mostly it is used when you just want to extract the value and not change it
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
   const [error, setError] = useState();
+
+  const enterName = useRef();
+  const enterAge = useRef();
 
   const addUserHandler = (event) => {
     event.preventDefault();
+    const enteredUsername = enterName.current.value;
+    const enteredAge = enterAge.current.value;
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
       setError({
         title: 'Invalid input',
@@ -27,16 +31,9 @@ const AddUser = (props) => {
       return;
     }
     props.onAddUser(enteredUsername, enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('');
-  };
-
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
+    //it is not advised to change the value of refs 
+    enterName.current.value = '';
+    enterAge.current.value = '';
   };
 
   const errorHandler = () => {
@@ -58,15 +55,13 @@ const AddUser = (props) => {
           <input
             id="username"
             type="text"
-            value={enteredUsername}
-            onChange={usernameChangeHandler}
+            ref={enterName}
           />
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={enteredAge}
-            onChange={ageChangeHandler}
+            ref={enterAge}
           />
           <Button type="submit">Add User</Button>
         </form>
